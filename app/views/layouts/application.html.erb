@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title> <%= full_title(yield(:title))%></title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= stylesheet_link_tag "application", :media => "all" %>
-
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+    <head>
+      <title> <%= full_title(yield(:title))%></title>
+      <%= stylesheet_link_tag    "application", :media => "all" %>
+      <%= stylesheet_link_tag "application", :media => "all" %>
+      <!--[if lt IE 9]>
+      <script src="http://html5shim.google.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+    </head>
+    <body>
+     <header class="navbar navbar-fixed-top">
+       <div class="navbar-inner">
+         <div class="container">
+           <%= link_to "sample app", '#', id: "logo" %>
+           <nav>
+              <ul class="nav pull-right">
+                <li><%= link_to "Home", '#' %></li>
+                <li><%= link_to "Help", '#' %></li>
+                <li><%= link_to "Sign in", '#' %></li>
+              </ul>
+           </nav>
+         </div>
+       </div>
+     </header>
+     <div class="container">
+         <%= yield %>
+     </div>
+    </body>
 </html>
