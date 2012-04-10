@@ -53,7 +53,7 @@ end
      click_link "Home"
      page.should have_selector 'title', text: full_title('')
      click_link "Sign up now!"
-     #page.should have_selector 'title', text: full_title('Sign')
+     page.should have_selector 'title', text: full_title('Sign')
 
 
    end
