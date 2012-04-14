@@ -35,10 +35,9 @@ describe "UserPages" do
 
       it { should have_selector('title', text: 'Sign Up')}
       it { should have_content('error')}
-      it { should have_css('div.field_with_errors')}
+      it { should have_css('.field_with_errors')}
       it { should have_css('#error_explanation') }
     end
-
     end
 
     describe "with valid information" do
@@ -50,6 +49,14 @@ describe "UserPages" do
     end
         it "should create a user" do
           expect { click_button submit }.to change(User, :count).by(1)
+        end
+
+        describe "after saving the user" do
+          before { click_button submit}
+          let(:user) { User.find_by_email('user@example.com')}
+
+          it { should have_selector('title', text: user.name)}
+          it { should have_selector('div.alert.alert-success', text: 'Welcome')}
         end
       end
     end
