@@ -22,8 +22,14 @@ end
     before {visit help_path}
     let(:heading) {'Help'}
     let(:page_title) {'Help'}
-
     it_should_behave_like 'all static pages'
+
+    it "should have the help header and title" do
+
+    proper_title(help_path)
+
+
+    end
   end
 
   describe "About page" do

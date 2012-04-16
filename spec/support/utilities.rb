@@ -1,1 +1,2 @@
 include ApplicationHelper
+include StaticPagesHelper
