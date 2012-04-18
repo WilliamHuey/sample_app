@@ -47,34 +47,22 @@ end
     describe "for non-signed-in users" do
       let(:user) {FactoryGirl.create(:user)}
 
-      describe "in the Users controller" do
-
-        describe "visiting the edit page" do
-          before {visit edit_user_path(user)}
-          it { should have_selector('title', text: 'Sign in') }
+      describe "when attempting to visit a protected page" do
+        before do
+          visit edit_user_path(user)
+          fill_in "Email", with: user.email
+          fill_in "Password", with: user.password
+          click_button "Sign in"
         end
 
-        describe "submitting to the update action" do
-          before { put user_path(user)}
-          specify { response.should redirect_to(signin_path) }
-        end
+       describe "after signing in" do
+         it "should render the desired protected page" do
+           page.should have_selector('title', text: 'Edit user')
+         end
+       end
       end
+
     end
 
-   describe "as wrong user" do
-     let(:user) { FactoryGirl.create(:user) }
-     let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") }
-     before { sign_in user }
-
-     describe "visiting Users#edit page" do
-       before { visit edit_user_path(wrong_user)}
-       it { should_not have_selector('title', text: full_title('Edit user')) }
-     end
-
-     describe "submitting a PUT request to the Users#update action" do
-       before { put user_path(wrong_user) }
-       specify { response.should redirect_to(root_path) }
-     end
-   end
   end
 end
