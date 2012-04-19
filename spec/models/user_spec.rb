@@ -35,7 +35,13 @@ describe User do
 
     it { should be_admin }
   end
+=begin
+  describe "accessible attributes" do
+    describe "when admin_id is not present" do
 
+    end
+  end
+=end
 
   describe "when name is not present" do
     before { @user.name = "" }

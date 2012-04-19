@@ -4,6 +4,12 @@ describe "UserPages" do
 
   subject { page }
 
+  describe "accessible attributes" do
+    it "should not allow access to admin" do
+      expect { User.new(admin: true) }.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+
   describe "index" do
 
     let(:user) {FactoryGirl.create(:user) }
