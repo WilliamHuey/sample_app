@@ -64,6 +64,15 @@ end
           before { visit users_path }
           it { should have_selector('title', text: 'Sign in') }
         end
+
+        describe "visiting the profile page" do
+          it { should_not have_link('Profile', href: user_path(user)) }
+        end
+
+        describe "visiting the settings page" do
+          it { should_not have_link('Settings', href: edit_user_path(user)) }
+        end
+
       end
 
       describe "when attempting to visit a protected page" do
