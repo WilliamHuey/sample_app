@@ -115,5 +115,7 @@ end
         specify { response.should redirect_to(root_path) }
       end
     end
+
+
   end
 end
