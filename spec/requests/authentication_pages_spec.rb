@@ -116,6 +116,17 @@ end
       end
     end
 
+    describe "as admin user" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:admin) { FactoryGirl.create(:admin) }
+
+      before { sign_in admin }
+
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before { delete user_path(admin) }
+        specify { response.should redirect_to users_path }
+      end
+    end
 
   end
 end
