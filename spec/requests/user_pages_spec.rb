@@ -4,12 +4,6 @@ describe "UserPages" do
 
   subject { page }
 
-  describe "accessible attributes" do
-    it "should not allow access to admin" do
-      expect { User.new(admin: true) }.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
-  end
-
   describe "index" do
 
     let(:user) {FactoryGirl.create(:user) }
@@ -34,27 +28,6 @@ describe "UserPages" do
         end
       end
     end
-
-    describe "delete links" do
-
-      it { should_not have_link('delete') }
-
-      describe "as an admin user" do
-        let(:admin) {FactoryGirl.create(:admin) }
-        before do
-          sign_in admin
-          visit users_path
-        end
-
-        it { should have_link('delete', href: user_path(User.first)) }
-        it "should be able to delete another user" do
-          expect { click_link('delete') }.to change(User, :count).by(-1)
-        end
-        it { should_not have_link('delete', href: user_path(admin)) }
-
-      end
-    end
-
   end
 
   describe "profile page" do
