@@ -40,4 +40,32 @@ describe "MicropostPages" do
       end
     end
   end
+
+  describe "micropost count for 1 post" do
+
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+      sign_in user
+      visit root_path
+    end
+
+    it "should not pluralize single post" do
+      page.should have_content("1 micropost")
+    end
+  end
+
+  describe "micropost count for 2 posts" do
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+      FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+      sign_in user
+      visit root_path
+    end
+
+    it "should pluralize second post" do
+      page.should have_content("2 microposts")
+    end
+  end
 end
