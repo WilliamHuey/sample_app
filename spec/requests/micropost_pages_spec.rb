@@ -41,6 +41,16 @@ describe "MicropostPages" do
     end
   end
 
+  describe "micropost delete links" do
+    let(:user2) { 2.times { FactoryGirl.create(:micropost, user: user) } }
+
+    describe "as current user" do
+      it "should not have delete link visible for others" do
+        page.should_not have_selector('a', href: user_path(user2), text: 'delete')
+      end
+    end
+  end
+
   describe "micropost count" do
 
     describe "as 1 post" do
@@ -66,22 +76,22 @@ describe "MicropostPages" do
     end
   end
 
-    describe "micropost pagination" do
-      before { 40.times { FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum") } }
+  describe "micropost pagination" do
+    before { 40.times { FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum") } }
 
-      it "should list each micropost" do
-        Micropost.all[0..2].each do |micropost|
-          page.should have_selector('li', content: micropost.content)
-        end
-      end
-
-      it "should list the first page of microposts" do
-        page.should have_selector('a', href: "/?page=1")
-      end
-
-      it "should list the second page of microposts" do
-        #puts Micropost.all
-        page.should have_selector('a', href: "/?page=2")
+    it "should list each micropost" do
+      Micropost.all[0..2].each do |micropost|
+        page.should have_selector('li', content: micropost.content)
       end
     end
+
+    it "should list the first page of microposts" do
+      page.should have_selector('a', href: "/?page=1")
+    end
+
+    it "should list the second page of microposts" do
+      #puts Micropost.all
+      page.should have_selector('a', href: "/?page=2")
+    end
+  end
 end
