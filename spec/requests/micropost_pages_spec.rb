@@ -69,8 +69,6 @@ describe "MicropostPages" do
     describe "micropost pagination" do
       before { 40.times { FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum") } }
 
-      let(:first_page) { Micropost.paginate(page: 1) }
-
       it "should list each micropost" do
         Micropost.all[0..2].each do |micropost|
           page.should have_selector('li', content: micropost.content)

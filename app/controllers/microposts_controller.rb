@@ -16,6 +16,7 @@ class MicropostsController < ApplicationController
     else
       @feed_items = []
       render 'static_pages/home'
+      #redirect_to root_path
     end
   end
 
