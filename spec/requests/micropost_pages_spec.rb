@@ -41,31 +41,49 @@ describe "MicropostPages" do
     end
   end
 
-  describe "micropost count for 1 post" do
+  describe "micropost count" do
 
-    let(:user) { FactoryGirl.create(:user) }
-    before do
-      FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
-      sign_in user
-      visit root_path
+    describe "as 1 post" do
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+        #sign_in user
+        visit root_path
+      end
+      it "should not pluralize single post" do
+        page.should have_content("1 micropost")
+      end
     end
 
-    it "should not pluralize single post" do
-      page.should have_content("1 micropost")
-    end
-  end
-
-  describe "micropost count for 2 posts" do
-    let(:user) { FactoryGirl.create(:user) }
-    before do
-      FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
-      FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
-      sign_in user
-      visit root_path
-    end
-
-    it "should pluralize second post" do
-      page.should have_content("2 microposts")
+    describe "as 2 posts" do
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+        visit root_path
+      end
+      it "should pluralize second post" do
+        page.should have_content("2 microposts")
+      end
     end
   end
+
+    describe "micropost pagination" do
+      before { 40.times { FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum") } }
+
+      let(:first_page) { Micropost.paginate(page: 1) }
+
+      it "should list each micropost" do
+        Micropost.all[0..2].each do |micropost|
+          page.should have_selector('li', content: micropost.content)
+        end
+      end
+
+      it "should list the first page of microposts" do
+        page.should have_selector('a', href: "/?page=1")
+      end
+
+      it "should list the second page of microposts" do
+        #puts Micropost.all
+        page.should have_selector('a', href: "/?page=2")
+      end
+    end
 end
