@@ -4,9 +4,19 @@
       <%= f.text_area :content, class: "user_text", placeholder: "Compose new micropost..." %>
       <script>
           $('.user_text').val('');
+          $('.user_text').keydown(function() {
+              var stored_text = $('.user_text').val().substring(0, 139)
+              $('.user_text').val(stored_text)
+          })
           $('.user_text').keyup(function() {
               var user_text_count = $('.user_text').val().length;
-              $('.user_text_remaining').html(140 - user_text_count + " characters left");
+              if (140 - user_text_count <= 1) {
+                  var determineCharacters = "character"
+              }
+              else {
+                  determineCharacters = "characters"
+              }
+              $('.user_text_remaining').html(140 - user_text_count + " " + determineCharacters + " left");
           });
       </script>
       <p class="user_text_remaining">140 characters left</p>
