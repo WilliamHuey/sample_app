@@ -4,19 +4,47 @@
       <%= f.text_area :content, class: "user_text", placeholder: "Compose new micropost..." %>
       <script>
           $('.user_text').val('');
-          $('.user_text').keydown(function() {
-              var stored_text = $('.user_text').val().substring(0, 139)
-              $('.user_text').val(stored_text)
-          })
+          var limit = 140;
+          $('.user_text').keydown(function(event) {
+              switch (event.keyCode) {
+                  case 8:
+                  // backspace
+                  case 46:
+                  // forward delete
+                  case 37:
+                  // left arrow
+                  case 38:
+                  // up arrow
+                  case 39:
+                  // right arrow
+                  case 40:
+                  // down arrow
+                  case 86:
+                      // v (as in ctrl-v or command-v)
+                      break;
+                  default:
+                      if (this.value.length == limit) {
+                          event.preventDefault();
+                      }
+              }
+              $('.user_text').on('paste', function() {
+                  setTimeout(function() {
+                      if ($('.user_text').val().length > limit) {
+                          trimmed = $('.user_text').val().substr(0, limit);
+                          $('.user_text').val(trimmed);
+                      }
+                  }, 10);
+              });
+          });
           $('.user_text').keyup(function() {
               var user_text_count = $('.user_text').val().length;
-              if (140 - user_text_count <= 1) {
+              if (limit - user_text_count <= 1) {
                   var determineCharacters = "character"
               }
               else {
                   determineCharacters = "characters"
               }
-              $('.user_text_remaining').html(140 - user_text_count + " " + determineCharacters + " left");
+              $('.user_text_remaining').html(limit - user_text_count + " " + determineCharacters + " left");
           });
       </script>
       <p class="user_text_remaining">140 characters left</p>
