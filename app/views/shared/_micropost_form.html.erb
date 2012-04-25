@@ -3,49 +3,105 @@
     <div class="field">
       <%= f.text_area :content, class: "user_text", placeholder: "Compose new micropost..." %>
       <script>
-          $('.user_text').val('');
-          var limit = 140;
-          $('.user_text').keydown(function(event) {
-              switch (event.keyCode) {
-                  case 8:
-                  // backspace
-                  case 46:
-                  // forward delete
-                  case 37:
-                  // left arrow
-                  case 38:
-                  // up arrow
-                  case 39:
-                  // right arrow
-                  case 40:
-                  // down arrow
-                  case 86:
-                      // v (as in ctrl-v or command-v)
-                      break;
-                  default:
-                      if (this.value.length == limit) {
-                          event.preventDefault();
-                      }
-              }
-              $('.user_text').on('paste', function() {
-                  setTimeout(function() {
-                      if ($('.user_text').val().length > limit) {
-                          trimmed = $('.user_text').val().substr(0, limit);
-                          $('.user_text').val(trimmed);
-                      }
-                  }, 10);
-              });
-          });
-          $('.user_text').keyup(function() {
-              var user_text_count = $('.user_text').val().length;
-              if (limit - user_text_count <= 1) {
-                  var determineCharacters = "character"
-              }
-              else {
-                  determineCharacters = "characters"
-              }
-              $('.user_text_remaining').html(limit - user_text_count + " " + determineCharacters + " left");
-          });
+			  (function() {
+				  var fieldSelection = {
+					  getSelection: function() {
+						  var e = (this.jquery) ? this[0] : this;
+						  return (
+							  /* mozilla / dom 3.0 */
+								  ('selectionStart' in e && function() {
+									  var l = e.selectionEnd - e.selectionStart;
+									  return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
+								  }) ||
+									  /* exploder */
+										  (document.selection && function() {
+											  e.focus();
+											  var r = document.selection.createRange();
+											  if (r === null) {
+												  return { start: 0, end: e.value.length, length: 0 }
+											  }
+											  var re = e.createTextRange();
+											  var rc = re.duplicate();
+											  re.moveToBookmark(r.getBookmark());
+											  rc.setEndPoint('EndToStart', re);
+											  return { start: rc.text.length, end: rc.text.length + r.text.length, length: r.text.length, text: r.text };
+										  }) ||
+									  /* browser not supported */
+										  function() {
+											  return null;
+										  }
+								  )();
+					  }
+
+				  };
+				  jQuery.each(fieldSelection, function(i) {
+					  jQuery.fn[i] = this;
+				  });
+			  })();
+
+			  $('.user_text').val('');
+			  var limit = 140;
+
+			  function textAreaLength() {
+				  var limit = 140;
+				  var user_text_count = $('.user_text').val().length;
+				  if (limit - user_text_count <= 1) {
+					  var determineCharacters = "character";
+				  }
+				  else {
+					  determineCharacters = "characters";
+				  }
+				  $('.user_text_remaining').html(limit - user_text_count + " " + determineCharacters + " left");
+			  }
+
+			  //keypress should used for opera; ok for firefox too
+			  $('.user_text').keypress(function(event) {
+				  switch (event.keyCode) {
+					  case 8:
+						  // backspace
+						  setTimeout(function() {
+							  textAreaLength()
+						  }, 10);
+					  case 46:
+					  // forward delete
+					  case 37:
+					  // left arrow
+					  case 38:
+					  // up arrow
+					  case 39:
+					  // right arrow
+					  case 40:
+					  // down arrow
+					  case 86:
+						  // v (as in ctrl-v or command-v)
+						  break;
+					  default:
+						  if ($('.user_text').getSelection().text == "" && $('.user_text').val().length >= limit) {
+							  if ($('.user_text').val().length >= limit);
+							  {
+								  event.preventDefault();
+								  trimmed = $('.user_text').val().substr(0, limit);
+								  $('.user_text').val(trimmed);
+							  }
+						  }
+				  }
+				    setTimeout(function() {
+					  textAreaLength()
+				  }, 10);
+			  });
+
+			  //works well in firefox but not opera
+			  $('.user_text').on('paste', function() {
+				  setTimeout(function() {
+					  if ($('.user_text').val().length > limit) {
+						  trimmed = $('.user_text').val().substr(0, limit);
+						  $('.user_text').val(trimmed);
+					  }
+				  }, 10);
+				  setTimeout(function() {
+					  textAreaLength()
+				  }, 20);
+			  });
       </script>
       <p class="user_text_remaining">140 characters left</p>
     </div>
