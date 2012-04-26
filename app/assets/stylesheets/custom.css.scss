@@ -170,10 +170,17 @@ aside {
 
 }
 
-
 .gravatar {
     float: left;
     margin-left: 10px;
+}
+
+.user_avatars {
+    overflow: auto;
+    margin-top: 10px;
+    .gravatar {
+        margin: 1px 1px;
+    }
 }
 
 /* forms */
@@ -244,3 +251,4 @@ aside {
         margin-bottom: 5px;
     }
 }
+
