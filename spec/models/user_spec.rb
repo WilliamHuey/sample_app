@@ -163,7 +163,7 @@ describe User do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
     end
 
-     describe "status" do
+    describe "status" do
       let(:unfollowed_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
@@ -195,9 +195,30 @@ describe User do
         Micropost.find_by_id(micropost.id).should be_nil
       end
     end
+  end
 
+  describe "relationship associations" do
+    #let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
 
+    before do
+      @user.save
+      @user.follow!(other_user)
+      other_user.follow!(@user)
+    end
 
+    it { should be_following(other_user) }
+    its(:followed_users) { should include(other_user) }
+
+    it "should destroy all of the user's followings" do
+      @user.destroy
+      other_user.followed_users.should be_empty
+    end
+
+    it "should destroy all of the user's followers" do
+      @user.destroy
+      other_user.followers.should be_empty
+    end
   end
 
 
