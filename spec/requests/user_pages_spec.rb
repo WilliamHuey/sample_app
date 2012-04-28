@@ -68,6 +68,32 @@ describe "UserPages" do
     it { should have_selector('h1', text: user.name) }
     it { should have_selector('title', text: user.name) }
 
+    describe "stats" do
+
+      it "should have the user's feed listing" do
+        user.microposts.each do |micropost|
+          page.should have_selector("li span.content", text: micropost.content)
+        end
+      end
+
+      describe "follower and following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit user_path(user)
+        end
+
+        it " should have working following links" do
+          page.should have_link("0 following", href: following_user_path(user))
+        end
+
+        it "should have working followers links" do
+          page.should have_link("1 follower", href: followers_user_path(user))
+        end
+
+      end
+    end
+
     describe "microposts" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
